@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List
 from abc import ABC, abstractmethod
 
-# importa as exceções do outro arquivo
+
 from errors import (
     ErroBanco,
     SaldoInsuficienteError,
@@ -18,10 +18,6 @@ from errors import (
     AgenciaJaExistenteError,
 )
 
-# --------------------------------------
-# Função auxiliar opcional (somente exceções!)
-# --------------------------------------
-
 def validar_valor(value: float) -> float:
     """Valida valores numéricos para operações bancárias."""
     try:
@@ -36,10 +32,6 @@ def validar_valor(value: float) -> float:
 
     return value
 
-
-# --------------------------------------
-# CLASSES
-# --------------------------------------
 
 class Bank:
     def __init__(self, name: str, cnpj: str, location: str, phone: str):
