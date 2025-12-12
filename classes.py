@@ -41,7 +41,7 @@ class Bank:
         self._phone = phone
         self._branch: List['Branch'] = []
 
-        # validações básicas de CNPJ bem simples, só exemplo
+        
         if not isinstance(cnpj, str) or len(cnpj.replace(".", "").replace("-", "").replace("/", "")) < 8:
             raise ValorInvalidoError("CNPJ em formato inválido.")
 
@@ -86,11 +86,11 @@ class Bank:
         self._phone = value
 
     def add_branch(self, branch: 'Branch'):
-        # valida tipo
+        
         if not isinstance(branch, Branch):
             raise TipoInvalidoError("O objeto informado não é uma branch válida.")
 
-        # valida se já existe agência com o mesmo número
+        
         for b in self._branch:
             if b.number == branch.number:
                 raise AgenciaJaExistenteError(f"Já existe uma agência com o número {branch.number}.")
@@ -319,7 +319,7 @@ class Account(Authenticate, ABC):
         self._password = value
 
     def authentication(self, password: str):
-        # aqui podemos levantar uma exception se a senha estiver errada
+        
         if not self.auntheticate(password):
             raise SenhaIncorretaError("Senha incorreta para a conta.")
         return True
@@ -377,7 +377,7 @@ class Current_account(Account, Tax):
         withdraw_value = value + self._tax
         available = self._balance + self._limit
 
-        # Exemplo de uso de LimiteExcedidoError:
+        
         if value > self._limit:
             raise LimiteExcedidoError("Valor do saque ultrapassa o limite da conta.")
 
@@ -410,13 +410,11 @@ class Savings_account(Account, Earning):
         self._date = datetime.now().day
 
     def get_Earning(self):
-        # Ex: poderia aplicar rendimento, só esquemático por enquanto
+        
         return self._balance * self._earnings
 
 
-# ===========================
-#   BLOCO DE TESTES / EXEMPLOS
-# ===========================
+
 
 if __name__ == "__main__":
 
@@ -429,7 +427,7 @@ if __name__ == "__main__":
         bank1.add_branch(agency2)
         bank1.show_branches()
 
-        # forçar erro de agência duplicada:
+        
         bank1.add_branch(Branch("1", "Agência repetida", "X", "Y"))
 
     except AgenciaJaExistenteError as e:
@@ -437,13 +435,13 @@ if __name__ == "__main__":
     except ErroBanco as e:
         print("Erro do sistema bancário ao criar banco ou agências:", e)
 
-    # branch inválida (tipo errado)
+    
     try:
         bank1.add_branch("isso não é uma branch")
     except TipoInvalidoError as e:
         print("Tratando erro de branch inválida:", e)
 
-    # conta corrente
+   
     try:
         account1 = Current_account("123", "Cliente 1", 100.0, "123", 50.0)
         agency1.add_account(account1)
@@ -451,7 +449,7 @@ if __name__ == "__main__":
     except ErroBanco as e:
         print("Erro ao sacar:", e)
 
-    # saque maior que limite de saque
+    
     try:
         account1.withdraw(1000.0)
     except LimiteExcedidoError as e:
@@ -459,19 +457,19 @@ if __name__ == "__main__":
     except SaldoInsuficienteError as e:
         print("Tratando saque maior que o permitido:", e)
 
-    # saque com valor inválido
+   
     try:
         account1.withdraw("abc")
     except ValorInvalidoError as e:
         print("Erro ao tentar sacar com valor inválido:", e)
 
-    # depósito com valor inválido
+    
     try:
         account1.deposit("xyz")
     except ValorInvalidoError as e:
         print("Erro ao tentar depositar com valor inválido:", e)
 
-    # autenticação com senha errada
+    
     try:
         account1.authentication("senha_errada")
     except SenhaIncorretaError as e:
